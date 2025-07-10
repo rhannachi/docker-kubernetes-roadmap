@@ -17,7 +17,7 @@ $ docker image ls
 $ docker run -d -p 4000:80 --name  node-app node-img:latest
 ```
 
-L’option --rm dans la commande docker run sert à supprimer automatiquement le conteneur dès qu’il s’arrête ou termine son exécution.
+L’option `--rm` dans la commande docker run sert à supprimer automatiquement le conteneur dès qu’il s’arrête ou termine son exécution.
 ```
 $ docker run --rm -d -p 4000:80 --name node-app node-img:latest
 $ docker stop node-app
@@ -76,6 +76,9 @@ $ docker rm <CONTAINER_ID or CONTAINER_NAME>
 
 `docker run` permet de créer un nouveau conteneur à partir d’une image.
 Pour démarrer un ou plusieurs conteneurs Docker qui sont actuellement arrêtés, sans en créer de nouveaux, il faut utiliser la commande `docker start`.
+
+- Utilisez `docker start` pour relancer un conteneur stoppé (STATUS => Exited).
+- Utilisez `docker exec` pour interagir ou diagnostiquer un conteneur déjà en fonctionnement (STATUS => Up).
 
 ```
 $ docker build -t node-img .

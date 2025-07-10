@@ -1,4 +1,4 @@
-### `-i` - Mode interactif
+### `i` - Mode interactif
 Dans cet exemple, nous avons une application Python qui demande à l'utilisateur d'interagir avec le terminal pour introduire deux nombres.
 C'est pour cette raison que nous devons utiliser le mode interactif :
 
@@ -43,4 +43,16 @@ $ docker image inspect py-img
 - **Layers (couches)** : structure et taille des différentes étapes de construction de l’image.
   Chemin JSON : `.RootFS.Layers`
 
+### `cp` - Copier des fichiers/dossiers entre hote/container
+La commande `docker cp` permet de copier des fichiers ou des dossiers entre votre machine hôte et un conteneur Docker (ou inversement), que le conteneur soit en cours d’exécution ou arrêté.
+
+Lancer un conteneur et ouvrir un terminal interactif (pour vérifier la copie immédiatement dans le conteneur)
+```
+$ docker run -it --name py-app py-img:latest sh
+```
+
+Pour copier le dossier dump (présent sur la machine) dans le dossier `/app` du conteneur `py-app`
+```
+$ docker cp dump py-app:/app
+```
 
