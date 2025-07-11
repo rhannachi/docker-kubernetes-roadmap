@@ -12,6 +12,8 @@ Ou bien, on peut lancer un conteneur en mode interactif avec cette commande :
 $ docker start -ia py-app
 ```
 
+---
+
 ### `inspect` - Informations détaillées sur une image Docker
 La commande `docker image inspect` est utilisée pour obtenir toutes les informations détaillées sur une image Docker.
 ```
@@ -43,6 +45,8 @@ $ docker image inspect py-img
 - **Layers (couches)** : structure et taille des différentes étapes de construction de l’image.
   Chemin JSON : `.RootFS.Layers`
 
+---
+
 ### `cp` - Copier des fichiers/dossiers entre hote/container
 La commande `docker cp` permet de copier des fichiers ou des dossiers entre votre machine hôte et un conteneur Docker (ou inversement), que le conteneur soit en cours d’exécution ou arrêté.
 
@@ -56,3 +60,26 @@ Pour copier le dossier dump (présent sur la machine) dans le dossier `/app` du 
 $ docker cp dump py-app:/app
 ```
 
+---
+
+### `tag` `push` `pull` - Cloner, pousser et récupérer une image sur Docker Hub
+```
+# Se connecter à Docker Hub
+$ docker login
+
+# Taguer l’image locale pour l’associer à votre référentiel Docker Hub
+$ docker tag py-img:latest rhannachi1991/py-img:latest
+
+# Vérifier la présence de la nouvelle image taguée
+$ docker images
+# → Vous verrez maintenant rhannachi1991/py-img:latest dans la liste, créée à partir de py-img:latest
+
+# Pousser l’image vers Docker Hub
+$ docker push rhannachi1991/py-img:latest
+
+# Supprimer l’image locale
+$ docker rmi rhannachi1991/py-img:latest
+
+# Récupérer l’image depuis Docker Hub
+$ docker pull rhannachi1991/py-img:latest
+```

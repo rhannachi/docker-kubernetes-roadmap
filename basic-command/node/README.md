@@ -1,12 +1,18 @@
-### Build image Docker
+### `build` - Build image Docker
 Construit une image Docker à partir du Dockerfile du dossier courant et lui donne le nom (tag) node-img.
 ```
 $ docker build -t node-img .
 ```
-### Afficher la liste des images Docker
+
+---
+
+### `image ls` - Afficher la liste des images Docker
 ```
 $ docker image ls
 ```
+
+---
+
 ### `run` - Lancer un conteneur à partir d'une image
 - **`-d`** : Lance le conteneur en **arrière-plan** (mode détaché)
 - **`-p 4000:80`** : **Redirige** le port 4000 de votre machine vers le port 80 du conteneur
@@ -20,11 +26,14 @@ $ docker run -d -p 4000:80 --name  node-app node-img:latest
 L’option `--rm` dans la commande docker run sert à supprimer automatiquement le conteneur dès qu’il s’arrête ou termine son exécution.
 ```
 $ docker run --rm -d -p 4000:80 --name node-app node-img:latest
+
 $ docker stop node-app
+
 $ docker ps -a
-// => il n'y a aucun conteneur "node-app" arrêté ou existant, car il a été supprimé automatiquement grâce à l'option --rm.
+# => il n'y a aucun conteneur "node-app" arrêté ou existant, car il a été supprimé automatiquement grâce à l'option --rm.
 ```
 
+---
 
 ### `exec` - Executer un container en Mode Interactif
 Pour entrer dans votre conteneur en mode interactif (s’il tourne en arrière-plan) :
@@ -37,13 +46,18 @@ Pour entrer dans votre conteneur en mode interactif au moment de son lancement:
 $ docker run -it -p 4000:80 --name node-app node-img:latest sh
 ```
 
-### Pour afficher la liste des conteneurs Docker en cours d’exécution:
+---
+
+### `ps` - Pour afficher la liste des conteneurs Docker en cours d’exécution:
 ```
 $ doker ps
+
 $ docker container ls
 ```
 
-### `stop` - Arrêter un conteneur:
+---
+
+### `stop` `kill` - Arrêter un conteneur:
 La méthode recommandée pour arrêter un conteneur en douceur:
 ```
 $ docker stop <ID-CONTAINER>
@@ -58,10 +72,15 @@ Pour forcer l’arrêt de tous les conteneurs en cours, on peut combiner docker 
 ```
 $ docker kill $(docker ps -q)
 ```
+
+---
+
 ### `rmi` - Supprimer une image par son ID
 ```
 $ docker rmi <IMAGE_ID or IMAGE_NAME>
 ```
+
+---
 
 ### `rm` - Supprimer un conteneur existant
 Lister tous les conteneurs (y compris les arrêtés)
@@ -71,6 +90,8 @@ $ docker ps -a
 ```
 $ docker rm <CONTAINER_ID or CONTAINER_NAME>
 ```
+
+---
 
 ### `start` - Démarrer un conteneur
 
@@ -82,29 +103,36 @@ Pour démarrer un ou plusieurs conteneurs Docker qui sont actuellement arrêtés
 
 ```
 $ docker build -t node-img .
+
 $ docker run -d -p 3000:80 --name node-app node-img:latest
+
 $ docker stop node-app
 ```
 ``` 
 $ docker start node-app
 ```
 
+---
+
 ### `attach` -  Se connecter à la sortie standard (STDOUT)
 La commande `docker attach` permet de connecter ton terminal aux flux d’entrée (STDIN), de sortie (STDOUT) et d’erreur (STDERR) d’un conteneur Docker déjà en cours d’exécution.
 ```
 $ docker build -t node-img .
-// attach mode
+
+# attach mode
 $ docker run -p 3000:80 --name node-app node-img:latest
-// => voir ce qui se passe à l’intérieur, comme si tu étais devant son terminal. 
-// (c’est-à-dire la sortie standard – STDOUT – du processus principal défini par la commande CMD ou ENTRYPOINT du Dockerfile).
+# => voir ce qui se passe à l’intérieur, comme si tu étais devant son terminal. 
+# (c’est-à-dire la sortie standard – STDOUT – du processus principal défini par la commande CMD ou ENTRYPOINT du Dockerfile).
 
 ```
 ``` 
 $ docker build -t node-img .
+
 $ docker run -d -p 3000:80 --name node-app node-img:latest
-// attach mode
+
+# attach mode
 $ docker attach node-app
-// => la sortie standard – STDOUT – du processus principal défini par la commande CMD ou ENTRYPOINT du Dockerfile
+# => la sortie standard – STDOUT – du processus principal défini par la commande CMD ou ENTRYPOINT du Dockerfile
 ```
 
 Tu peux également suivre les logs d’un conteneur en temps réel avec la commande suivante :
@@ -114,7 +142,7 @@ $ docker logs -f node-app
 
 Pour tout conteneur à l’arrêt, tu peux le redémarrer de cette façon tout en affichant sa sortie standard (stdout) :
 ```
-// attach mode
+# attach mode
 $ docker start -a node-app
 ```
 
