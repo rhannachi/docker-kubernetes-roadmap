@@ -1,9 +1,8 @@
 {
-  "name": "docker-complete",
+  "name": "node-app",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "author": "Maximilian Schwarzmüller / Academind GmbH",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
