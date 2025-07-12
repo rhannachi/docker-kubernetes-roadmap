@@ -8,6 +8,7 @@ COPY . .
 
 EXPOSE 80
 
+# Conserver la persistance du dossier /app/feedback sur l'hôte
 VOLUME /app/feedback
 
 CMD ["node", "server.js"]

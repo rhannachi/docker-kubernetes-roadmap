@@ -42,7 +42,7 @@ app.post('/create', async (req, res) => {
       await fs.unlink(tempFilePath);
       console.log(`${adjTitle} created in ${finalFilePath}`);
       console.log(' ');
-      res.redirect('/');
+      res.redirect(`/feedback/${adjTitle}.txt`);
     }
   });
 });
