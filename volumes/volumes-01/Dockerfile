@@ -8,7 +8,10 @@ COPY . .
 
 EXPOSE 80
 
-# Conserver la persistance du dossier /app/feedback sur l'hôte
+# "VOLUME /app/feedback" : Déclare que le contenu du dossier /app/feedback doit être persistant
+# "VOLUME /app/node_modules" : Déclare que le contenu du dossier /app/node_modules doit être persistant
+# Ces déclarations VOLUME créent des volumes "anonymes" si aucun volume spécifique n'est monté (-v) lors du lancement
 VOLUME /app/feedback
+VOLUME /app/node_modules
 
 CMD ["node", "server.js"]
