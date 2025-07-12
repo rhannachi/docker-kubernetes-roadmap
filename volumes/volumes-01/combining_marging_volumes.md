@@ -1,5 +1,5 @@
 
-## Analyse détaillée d'une commande `docker run` et du `Dockerfile` :
+## 1 - Analyse détaillée d'une commande `docker run` et du `Dockerfile` :
 
 ### Analyse du Dockerfile
 
@@ -151,6 +151,56 @@ $ docker volume prune
 - Les bind mounts **remplacent toujours** le contenu du répertoire ciblé dans le conteneur par celui du **dossier de l’hôte**.
 - Les volumes **plus profonds ont la priorité** sur les volumes plus généraux
 
-Cette approche te permet d'avoir une **synchronisation sélective** : le code source est synchronisé en temps réel, les données persistent dans des volumes nommés, et les dépendances restent isolées dans des volumes spécifiques.
+---
+
+## 2 - Analyse détaillée d'une commande `docker run` et du `Dockerfile` :
+
+### Analyse du Dockerfile
+
+```
+$ docker run --rm -p 3000:80 -v .:/app:ro -v /app/temp  -v feedback:/app/feedback --name node-app node-img:latest
+```
+
+```dockerfile
+FROM node:current-alpine3.22
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 80
+VOLUME /app/feedback
+VOLUME /app/node_modules
+CMD ["node", "server.js"]
+```
+
+### Analyse détaillée des volumes
+
+#### 1. Bind mount principal : `.:/app:ro`
+
+- **Effet** : Remplace le contenu complet du répertoire `/app` dans le conteneur par celui du dossier courant de l'hôte
+- **Permissions** : Lecture seule (`:ro`)
+- **Priorité** : Niveau 1 (base)
+
+
+#### 2. Volume anonyme : `/app/temp`
+
+- **Effet** : Crée un volume temporaire pour `/app/temp`
+- **Priorité** : Niveau 2 - **prioritaire sur le bind mount** pour ce sous-répertoire
+- **Permissions** : Lecture/écriture
+
+
+#### 3. Volume nommé : `feedback:/app/feedback`
+
+- **Effet** : Monte le volume nommé `feedback` dans `/app/feedback`
+- **Priorité** : Niveau 3 - **prioritaire sur le bind mount** pour ce sous-répertoire
+- **Permissions** : Lecture/écriture
+
+
+#### 4. Volume anonyme (Dockerfile) : `/app/node_modules`
+
+- **Effet** : Crée un volume anonyme car déclaré dans le Dockerfile mais pas de montage explicite dans la commande
+- **Priorité** : Niveau 3 - **prioritaire sur le bind mount** pour ce sous-répertoire
+- **Permissions** : Lecture/écriture
+
 
 <div style="text-align: center">⁂</div>
