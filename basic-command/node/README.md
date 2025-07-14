@@ -188,3 +188,50 @@ Commande pour lancer le conteneur avec ce fichier :
 ```
 $ docker run -p 3000:88 --env-file ./file.env --name node-app node-img
 ```
+
+### `build-arg` – Utilisation des arguments lors du build
+
+```dockerfile
+FROM node:current-alpine3.22
+
+ARG DEFAULT_PORT=80
+
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+ENV PORT=$DEFAULT_PORT
+EXPOSE $PORT
+
+CMD ["node", "server.js"]
+```
+
+#### Exemple 1 : Construire et lancer un conteneur sans modifier `DEFAULT_PORT`
+
+```
+$ docker build -t node-img .
+$ docker run --rm -p 3000:80 --name node-app node-img:latest
+```
+- Ici, le port par défaut est 80 (défini par `ARG DEFAULT_PORT=80`), donc le conteneur écoutera sur le port 80.
+
+#### Exemple 2 : Construire l’image en modifiant `DEFAULT_PORT`
+
+```
+$ docker build --build-arg DEFAULT_PORT=88 -t node-img .
+$ docker run -p 3000:88 --name node-app node-img:latest
+```
+
+- Ici, le port d’écoute du conteneur sera 88, car la valeur de l’argument de build a été surchargée lors du build.
+
+
+### Explications importantes
+
+- **`ARG`** permet de définir des variables **uniquement disponibles pendant la construction de l’image** (build-time).
+- Tu peux fournir une nouvelle valeur à un argument avec l’option `--build-arg` lors du `docker build`.
+
+**Résumé** :
+
+- Utilise `ARG` pour personnaliser la construction de l’image sans modifier le Dockerfile.
+- Utilise `--build-arg` pour passer des valeurs au moment du build.
+- Utilise `ENV` pour que les variables soient disponibles dans le conteneur à l’exécution.
+- Les arguments de build sont très utiles pour rendre tes images Docker plus flexibles et réutilisables, tout en évitant de "figer" des valeurs dans le Dockerfile.
