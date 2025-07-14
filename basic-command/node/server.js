@@ -43,4 +43,5 @@ app.post('/store-goal', (req, res) => {
   res.redirect('/');
 });
 
-app.listen(80);
+app.listen(process.env.PORT);
+console.log(`node starting port:${process.env.PORT}`)

@@ -6,5 +6,9 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 80
+# Définit une variable d’environnement PORT avec la valeur 80 à l’intérieur du conteneur.
+ENV PORT=80
+# Indique à Docker que le conteneur écoute sur le port spécifié
+EXPOSE $PORT
+
 CMD ["node", "server.js"]

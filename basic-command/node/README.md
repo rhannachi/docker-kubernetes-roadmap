@@ -1,21 +1,7 @@
-## Résumé des uses cases de l’application
+## Sommaire
+* [Résumé des uses cases de l’application](uses_cases.md)
 
-#### 1. Affichage de la page d’accueil (objectif du cours)
-
-- **URL** : `/`
-- **Description** :
-  L’utilisateur accède à la page principale, voit l’objectif du cours actuel (par défaut : "Learn Docker!") et un formulaire pour définir un nouvel objectif.
-
-
-#### 2. Modification de l’objectif du cours
-
-- **URL** : `/store-goal` (méthode POST)
-- **Description** :
-  L’utilisateur saisit un nouvel objectif dans le formulaire et le soumet.
-    - L’objectif saisi est enregistré côté serveur (en mémoire).
-    - L’utilisateur est redirigé vers la page d’accueil, où le nouvel objectif s’affiche.
-
----
+--- 
 
 ## Dockerfile
 ### `build` - Build image Docker
@@ -166,3 +152,39 @@ Pour tout conteneur à l’arrêt, tu peux le redémarrer de cette façon tout e
 $ docker start -a node-app
 ```
 
+### Variable d'environnement dans Docker
+
+Pour lancer un conteneur Docker avec des variables d’environnement, on utilise l’option `-e` (ou `--env`) dans la commande `docker run`. Cela permet de définir des paires clé-valeur accessibles à l’intérieur du conteneur.
+
+#### Exemple 1 : Lancer un conteneur avec la variable `PORT` par défaut à 80
+
+```
+$ docker run -p 3000:80 --name node-app node-img
+```
+
+Ici, le port 80 du conteneur est exposé et mappé sur le port 3000 de l’hôte. La variable `PORT` est définie dans l’image Docker (via `ENV PORT=80` dans le Dockerfile).
+
+#### Exemple 2 : Modifier la variable d’environnement `PORT` à 88 et ajouter une autre variable
+
+```
+$ docker run -p 3000:88 -e PORT=88 -e VAR_1=var_1 --name node-app node-img
+```
+
+- `-e PORT=88` : remplace la valeur par défaut de `PORT` par 88 dans le conteneur.
+- `-e VAR_1=var_1` : ajoute une variable d’environnement supplémentaire.
+
+
+#### Exemple 3 : Utiliser un fichier d’environnement (`.env`)
+
+Fichier `file.env` :
+
+```
+PORT=88
+VAR_1=var_1
+```
+
+Commande pour lancer le conteneur avec ce fichier :
+
+```
+$ docker run -p 3000:88 --env-file ./file.env --name node-app node-img
+```
