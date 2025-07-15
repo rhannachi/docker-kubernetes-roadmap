@@ -3,10 +3,12 @@ const bodyParser = require('body-parser');
 const axios = require('axios').default;
 const mongoose = require('mongoose');
 
-/** **/
-const URL_MONGODB = '172.17.0.2';
+/**************************** **/
+//const URL_MONGODB = '172.17.0.2';
+// Si on démarre un conteneur Mongo nommé `mongo-app`
+const URL_MONGODB = 'mongo-app';
 const PORT_MONGODB = 27017
-/** **/
+/**************************** **/
 
 const Favorite = require('./models/favorite');
 
