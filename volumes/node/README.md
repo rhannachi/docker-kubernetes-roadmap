@@ -57,3 +57,70 @@ Dans ce cas, le dossier `./feedback` de ton projet local sera synchronisé avec 
 
 ---
 
+#### Inspection de l'image et Explication du Comportement Observé
+
+Lorsque tu utilises ce Dockerfile :
+
+```dockerfile
+FROM node:current-alpine3.22
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 80
+VOLUME /app/feedback
+VOLUME /app/node_modules
+CMD ["npm", "start"]
+```
+
+et que tu construis l’image avec :
+
+```
+$ docker build -t node-img .
+```
+
+puis que tu inspectes l’image avec :
+
+```
+$ docker image inspect node-img
+```
+
+tu remarques que la section "Config" inclut :
+
+- Les instructions EXPOSE, VOLUME, CMD et WORKDIR.
+- Certaines variables d’environnement et propriétés héritées de l’image parent (ici, `node:current-alpine3.22`).
+
+Notamment, la présence d’un `"Entrypoint": ["docker-entrypoint.sh"]` qui ne figure pas dans ton Dockerfile mais est incluse par défaut dans l’image officielle Node.js.
+
+```
+        "Config": {
+            "ArgsEscaped": true,
+            "Cmd": [
+                "npm",
+                "start"
+            ],
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.4.0",
+                "YARN_VERSION=1.22.22"
+            ],
+            "ExposedPorts": {
+                "80/tcp": {}
+            },
+            "Labels": null,
+            "OnBuild": null,
+            "User": "",
+            "Volumes": {
+                "/app/feedback": {},
+                "/app/node_modules": {}
+            },
+            "WorkingDir": "/app"
+        }
+
+```
+
+
+
