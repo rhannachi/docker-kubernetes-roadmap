@@ -7,10 +7,10 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 /***** URI DataBase *******/
-const PORT_DATABASE = 27017
-const URL_DATABASE = "mongo-app" // "localhost"
+const PORT_DATABASE = process.env.PORT_DATABASE // 27017
+const URL_DATABASE = process.env.URL_DATABASE // "mongo-app" // "localhost"
 const URI = `mongodb://${URL_DATABASE}:${PORT_DATABASE}/course-goals`
-const PORT = 80
+const PORT = process.env.PORT // 80
 /************/
 
 const Goal = require('./models/goal');

@@ -1,15 +1,14 @@
 FROM node:current-alpine3.22
-WORKDIR /app
+ENV NODE_ENV=development
 
+WORKDIR /app
 COPY package*.json .
 RUN npm install
 
 COPY . .
-
 VOLUME /app/node_modules
 VOLUME /app/logs
 
 EXPOSE 80
 
-CMD ["node", "app.js"]
-
+CMD ["npm", "run", "dev"]

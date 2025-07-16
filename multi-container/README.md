@@ -1,4 +1,4 @@
-### Configuration du projet multi-containers (DEV)
+### Configuration du projet multi-containers
 
 #### 1. Créer un réseau Docker personnalisé
 Permet aux containers backend et base de données de communiquer facilement :
@@ -21,15 +21,31 @@ $ docker pull mongo
 ```
 $ docker run --rm --network database-net -v mongodb-data:/data/db --name mongo-app mongo:latest
 ```
+du moment qu'on a appelé notre container de base de donnée `mongo-app` il faut modifier `URL_DATABASE` dans le fichier .env du projet back
 
-#### 5. Build et lancement du container backend
+#### 5. Back (en mode DEV/PROD)
 ```
-$ docker build -t back-img ./back
-$ docker run --rm -p 3000:80 -v ./back/logs:/app/logs --network database-net --name back-app back-img:latest
+$ docker build -f ./back/Dockerfile.dev -t back-img:dev ./back
+$ docker build -f ./back/Dockerfile.prod -t back-img ./back
 ```
 
-#### 6. Build et lancement du container frontend
+lancement du container backend
 ```
-$ docker build -t front-img ./front
-$ docker run -d --env-file ./front/.env -p 4000:4000 -v ./front:/app --name front-app front-img:latest
+# lancer en mode DEV
+$ docker run --rm --env-file ./back/.env -p 3000:80 -v ./back:/app -v ./back/logs:/app/logs --network database-net --name back-app.dev back-img:dev
+# lancer en mode PROD
+$ docker run --rm --env-file ./back/.env -p 3000:80 -v ./back/logs:/app/logs --network database-net --name back-app back-img
 ```
+
+#### 7. Front (en mode DEV/PROD)
+```
+$ docker build -f ./front/Dockerfile.dev -t front-img:dev ./front
+$ docker build -f ./front/Dockerfile.prod -t front-img ./front
+```
+
+lancement du container frontend en mode DEV et PROD
+```
+$ docker run --rm --env-file ./front/.env -p 4000:4000 -v ./front:/app --name front-app.dev front-img:dev
+$ docker run --rm --env-file ./front/.env -p 80:80 --name front-app front-img
+```
+

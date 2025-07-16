@@ -10,5 +10,5 @@ VOLUME /app/node_modules
 
 EXPOSE 4000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 
