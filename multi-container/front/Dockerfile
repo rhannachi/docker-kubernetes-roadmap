@@ -1,0 +1,14 @@
+FROM node:current-alpine3.22
+WORKDIR /app
+
+COPY package*.json .
+RUN npm install
+
+COPY . .
+
+VOLUME /app/node_modules
+
+EXPOSE 4000
+
+CMD ["npm", "start"]
+

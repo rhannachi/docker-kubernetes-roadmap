@@ -120,7 +120,6 @@ mongodb://mongo-app:27017/nom-de-votre-base
 
 - **Astuce :** Utiliser le nom du container (`mongo-app`) dans l’URL permet à Node.js de localiser MongoDB automatiquement grâce au réseau Docker personnalisé.
 
-
 #### 4. Démarrer le container Node.js
 
 Construisez l’image de votre application puis lancez le container :
