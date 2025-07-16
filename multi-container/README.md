@@ -1,51 +1,105 @@
-### Configuration du projet multi-containers
+### Déploiement d’un projet multi-containers Docker
 
-#### 1. Créer un réseau Docker personnalisé
-Permet aux containers backend et base de données de communiquer facilement :
+Ce guide explique comment lancer une stack **MongoDB + Node.js (Back) + React (Front)** de façon claire, maintenable et professionnelle – sans utiliser Docker Compose.
+
+### 1. Création du réseau Docker
+
+Permet aux containers (backend, base de données) de communiquer entre eux grâce à la résolution automatique de leur nom :
+
 ```
 $ docker network create database-net
 ```
 
-#### 2. Créer un volume pour la persistance des données MongoDB
-Assure la sauvegarde des données même après suppression du container :
+
+### 2. Persistance des données MongoDB
+
+Crée un **volume Docker** pour que les données MongoDB survivent à la suppression des containers :
+
 ```
 $ docker volume create mongodb-data
 ```
 
-#### 3. Récupérer l'image MongoDB officielle
+
+### 3. Préparation et lancement de la base de données MongoDB
+
+Télécharge l’image officielle Mongo et lance le container :
+
 ```
 $ docker pull mongo
+
+$ docker run \
+  --network database-net \
+  --name mongo-app \
+  -v mongodb-data:/data/db \
+  mongo:latest
 ```
 
-#### 4. Lancer MongoDB avec persistance des données
-```
-$ docker run --rm --network database-net -v mongodb-data:/data/db --name mongo-app mongo:latest
-```
-du moment qu'on a appelé notre container de base de donnée `mongo-app` il faut modifier `URL_DATABASE` dans le fichier .env du projet back
+- **Astuce** : utilise le nom `mongo-app` dans l’URL de connexion du backend dans le fichier `.env` du backend.
 
-#### 5. Back (en mode DEV/PROD)
+
+### 4. Construction et lancement du Backend (Node.js)
+
+#### Construction des images
+
+- DEV : `docker build --target dev -t back-img:dev ./back`
+- PROD : `docker build --target prod -t back-img ./back`
+
+
+#### Lancement des containers
+
+- **DEV** :
+
 ```
-$ docker build -f ./back/Dockerfile.dev -t back-img:dev ./back
-$ docker build -f ./back/Dockerfile.prod -t back-img ./back
+$ docker run --rm \
+  --env-file ./back/.env \
+  -p 3000:80 \
+  -v ./back:/app \
+  -v ./back/logs:/app/logs \
+  --network database-net \
+  --name back-app.dev \
+  back-img:dev
 ```
 
-lancement du container backend
+- **PROD** :
+
 ```
-# lancer en mode DEV
-$ docker run --rm --env-file ./back/.env -p 3000:80 -v ./back:/app -v ./back/logs:/app/logs --network database-net --name back-app.dev back-img:dev
-# lancer en mode PROD
-$ docker run --rm --env-file ./back/.env -p 3000:80 -v ./back/logs:/app/logs --network database-net --name back-app back-img
+$ docker run --rm \
+  --env-file ./back/.env \
+  -p 3000:80 \
+  -v ./back/logs:/app/logs \
+  --network database-net \
+  --name back-app \
+  back-img
 ```
 
-#### 7. Front (en mode DEV/PROD)
+
+### 5. Construction et lancement du Frontend (React)
+
+#### Construction des images
+
+- DEV : `docker build --target dev -t front-img:dev ./front`
+- PROD : `docker build --target prod -t front-img ./front`
+
+#### Lancement des containers
+
+- **DEV** :
+
 ```
-$ docker build -f ./front/Dockerfile.dev -t front-img:dev ./front
-$ docker build -f ./front/Dockerfile.prod -t front-img ./front
+$ docker run --rm \
+  --env-file ./front/.env \
+  -p 4000:4000 \
+  -v ./front:/app \
+  --name front-app.dev \
+  front-img:dev
 ```
 
-lancement du container frontend en mode DEV et PROD
+- **PROD** :
+
 ```
-$ docker run --rm --env-file ./front/.env -p 4000:4000 -v ./front:/app --name front-app.dev front-img:dev
-$ docker run --rm --env-file ./front/.env -p 80:80 --name front-app front-img
+$ docker run --rm \
+  --env-file ./front/.env \
+  -p 80:80 \
+  --name front-app \
+  front-img
 ```
 
