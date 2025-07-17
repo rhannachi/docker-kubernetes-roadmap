@@ -9,8 +9,11 @@ const morgan = require('morgan');
 /***** URI DataBase *******/
 const PORT_DATABASE = process.env.PORT_DATABASE // 27017
 const URL_DATABASE = process.env.URL_DATABASE // "mongo-app" // "localhost"
-const URI = `mongodb://${URL_DATABASE}:${PORT_DATABASE}/course-goals`
+const USERNAME = process.env.MONGO_INITDB_ROOT_USERNAME // DATABASE username
+const PASSWORD = process.env.MONGO_INITDB_ROOT_PASSWORD // DATABASE password
+const URI = `mongodb://${USERNAME}:${PASSWORD}@${URL_DATABASE}:${PORT_DATABASE}/course-goals?authSource=admin`
 const PORT = process.env.PORT // 80
+console.log("URI database:", URI)
 /************/
 
 const Goal = require('./models/goal');

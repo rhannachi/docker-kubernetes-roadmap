@@ -28,6 +28,7 @@ Télécharge l’image officielle Mongo et lance le container :
 $ docker pull mongo
 
 $ docker run \
+  --env-file ./back/.env \
   --network database-net \
   --name mongo-app \
   -v mongodb-data:/data/db \
