@@ -1,0 +1,103 @@
+# docker-compose --profile dev up
+# docker-compose --profile prod up
+
+version: '3.8'
+
+services:
+  # Base de données MongoDB
+  mongo-app:
+    image: mongo:latest
+    container_name: mongo-app
+    env_file:
+      - ./back/.env
+    networks:
+      - database-net
+    volumes:
+      - mongodb-data:/data/db
+    restart: unless-stopped # Le conteneur sera toujours redémarré automatiquement s’il s’arrête de manière inattendue. Si tu arrêtes le conteneur manuellement, Docker ne le redémarrera plus.
+
+  # Backend Node.js - Environnement de développement
+  back-app-dev:
+    build:
+      context: ./back
+      target: dev
+    image: back-img:dev
+    container_name: back-app.dev
+    env_file:
+      - ./back/.env
+    ports:
+      - "3000:80"
+    volumes:
+      - ./back:/app
+      - ./back/logs:/app/logs
+    networks:
+      - database-net
+    depends_on: # Si un service A dépend du service B, avec depends_on, Docker Compose lance d'abord B puis seulement ensuite A.
+      - mongo-app
+    restart: unless-stopped
+    profiles:
+      - dev
+
+  # Backend Node.js - Environnement de production
+  back-app-prod:
+    build:
+      context: ./back
+      target: prod
+    image: back-img
+    container_name: back-app
+    env_file:
+      - ./back/.env
+    ports:
+      - "3000:80"
+    volumes:
+      - ./back/logs:/app/logs
+    networks:
+      - database-net
+    depends_on:
+      - mongo-app
+    restart: unless-stopped
+    profiles: # permet de définir des groupes de services activables à la demande, afin d’adapter facilement votre stack à différents environnements 'dev', 'prod', ...
+      - prod
+
+  # Frontend React - Environnement de développement
+  front-app-dev:
+    build:
+      context: ./front
+      target: dev
+    image: front-img:dev
+    container_name: front-app.dev
+    env_file:
+      - ./front/.env
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./front:/app
+    restart: unless-stopped
+    profiles:
+      - dev
+
+  # Frontend React - Environnement de production
+  front-app-prod:
+    build:
+      context: ./front
+      target: prod
+    image: front-img
+    container_name: front-app
+    env_file:
+      - ./front/.env
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    profiles:
+      - prod
+
+# Réseaux
+networks:
+  database-net:
+    driver: bridge
+
+# Volumes
+volumes:
+  mongodb-data:
+    driver: local
+
