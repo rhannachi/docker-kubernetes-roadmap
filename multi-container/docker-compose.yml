@@ -1,7 +1,3 @@
-# docker-compose --profile dev up
-# docker-compose --profile prod up
-
-version: '3.8'
 
 services:
   # Base de données MongoDB

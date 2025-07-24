@@ -2,3 +2,5 @@
 .idea/
 
 multi-container/back/logs/
+
+utility/node_modules/
