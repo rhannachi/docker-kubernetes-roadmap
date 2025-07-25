@@ -225,6 +225,19 @@ $ docker compose --profile dev logs -f back-app-dev
 $ docker compose --profile dev build
 ```
 
+Dès lors qu’on a défini `stdin_open: true` et `tty: true` dans nos services `back-app-dev` et `front-app-dev` du fichier docker-compose.yml, il devient possible d’interagir directement en mode terminal avec les conteneurs via Docker Compose. 
+Ces options créent un environnement interactif pour les commandes comme sh, facilitant l’accès au shell ou l’exécution de commandes interactives à l’intérieur du conteneur.
+```
+# Ouvrir un shell interactif dans le conteneur (sous le profil "dev")
+docker compose --profile dev exec back-app-dev sh
+
+# Installer le package npm "ping" à l’intérieur du conteneur
+docker compose --profile dev exec back-app-dev npm install ping
+
+# Lancer un ping vers google.com depuis le conteneur
+docker compose --profile dev exec back-app-dev ping google.com
+```
+
 #### production `profiles prod`
 ```
 $ docker compose --profile prod up -d
