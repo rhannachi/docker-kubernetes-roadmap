@@ -18,8 +18,8 @@ Dans votre projet, votre fichier `docker-compose.yml` comprend 6 services, répa
 
 Pour installer Laravel dans le dossier `src` grâce au service `composer-utility` :
 
-```bash
-docker compose run --rm composer-utility create-project laravel/laravel .
+```
+$ docker compose run --rm composer-utility create-project laravel/laravel .
 ```
 
 > **Attention** : Assurez-vous que le dossier `src` (mappé en volume) est vide avant d’exécuter cette commande.
@@ -47,17 +47,16 @@ SESSION_DRIVER=cookie
 
 Pour démarrer l’environnement applicatif (sans les utilitaires), utilisez :
 
-```bash
-docker compose up --build -d nginx php mysql
+```
+$ docker compose up --build -d nginx php mysql
 ```
 
 - Cette commande initialise et démarre exclusivement les services nécessaires au fonctionnement de l’application.
 
-
-
 ## Architecture Générale
 
-L'architecture de ce projet suit une approche de microservices utilisant Docker Compose pour orchestrer plusieurs conteneurs spécialisés[^1][^2]. Cette approche permet une séparation claire des responsabilités et une scalabilité optimale pour le développement d'applications Laravel[^3][^4].
+L'architecture de ce projet suit une approche de microservices utilisant Docker Compose pour orchestrer plusieurs conteneurs spécialisés. 
+Cette approche permet une séparation claire des responsabilités et une scalabilité optimale pour le développement d'applications Laravel.
 
 ### Structure du Projet
 
@@ -81,7 +80,7 @@ Cette structure suit les meilleures pratiques Docker en séparant les préoccupa
 
 ### Service Nginx (Serveur Web)
 
-Le service Nginx agit comme serveur web et reverse proxy, gérant les requêtes HTTP entrantes et les transmettant au service PHP via FastCGI
+Le service Nginx agit comme serveur web et reverse proxy, gérant les requêtes HTTP entrantes et les transmettant au service PHP via FastCGI \
 **Rôle technique:** Nginx sert les fichiers statiques et transmet les requêtes PHP au service PHP-FPM via le protocole FastCGI sur le port 9000.
 Cette séparation permet une meilleure performance et scalabilité.
 
@@ -101,9 +100,9 @@ Service utilitaire pour gérer les dépendances PHP avec Composer sans installat
 
 **Usage typique:**
 
-```bash
-docker-compose run --rm composer-utility install
-docker-compose run --rm composer-utility require package/name
+```
+$ docker compose run --rm composer-utility install
+$ docker compose run --rm composer-utility require package/name
 ```
 
 
@@ -113,10 +112,9 @@ Service utilitaire pour exécuter les commandes Laravel Artisan dans l'environne
 
 **Usage typique:**
 
-```bash
-docker-compose run --rm artisan-utility migrate
-docker-compose run --rm artisan-utility make:controller UserController
-docker-compose run --rm artisan-utility queue:work
+```
+$ docker compose run --rm artisan-utility migrate
+$ docker compose run --rm artisan-utility make:controller UserController
 ```
 
 Cette approche évite d'installer PHP localement tout en conservant l'accès complet aux commandes Artisan.
@@ -127,10 +125,10 @@ Service utilitaire pour la gestion des assets frontend avec Node.js et NPM.
 
 **Usage typique:**
 
-```bash
-docker-compose run --rm npm-utility install
-docker-compose run --rm npm-utility run dev
-docker-compose run --rm npm-utility run build
+```
+$ docker compose run --rm npm-utility install
+$ docker compose run --rm npm-utility run dev
+$ docker compose run --rm npm-utility run build
 ```
 
 
@@ -140,33 +138,33 @@ docker-compose run --rm npm-utility run build
 
 **1. Construction et lancement de tous les services:**
 
-```bash
-docker-compose up -d --build
+```
+$ docker compose up -d --build
 ```
 
 **2. Lancement des services existants:**
 
-```bash
-docker-compose up -d
+```
+$ docker compose up -d
 ```
 
 **3. Arrêt des services:**
 
-```bash
-docker-compose down
+```
+$ docker compose down
 ```
 
 **4. Visualisation des logs:**
 
-```bash
-docker-compose logs -f [service-name]
+```
+$ docker compose logs -f [service-name]
 ```
 
 **5. Accès aux containers:**
 
-```bash
-docker-compose exec php sh
-docker-compose exec nginx sh
+```
+$ docker compose exec php sh
+$ docker compose exec nginx sh
 ```
 
 
@@ -174,35 +172,35 @@ docker-compose exec nginx sh
 
 **1. Installation initiale des dépendances:**
 
-```bash
+```
 # Installation des dépendances PHP
-docker-compose run --rm composer-utility install
+$ docker compose run --rm composer-utility install
 
 # Installation des dépendances Node.js
-docker-compose run --rm npm-utility install
+$ docker compose run --rm npm-utility install
 
 # Génération de la clé d'application Laravel
-docker-compose run --rm artisan-utility key:generate
+$ docker compose run --rm artisan-utility key:generate
 ```
 
 **2. Migration et seeding de la base de données:**
 
-```bash
+```
 # Exécution des migrations
-docker-compose run --rm artisan-utility migrate
+$ docker compose run --rm artisan-utility migrate
 
 # Seeding des données
-docker-compose run --rm artisan-utility db:seed
+$ docker compose run --rm artisan-utility db:seed
 ```
 
 **3. Compilation des assets:**
 
-```bash
+```
 # Développement
-docker-compose run --rm npm-utility run dev
+$ docker compose run --rm npm-utility run dev
 
 # Production
-docker-compose run --rm npm-utility run build
+$ docker compose run --rm npm-utility run build
 ```
 
 
