@@ -1,4 +1,6 @@
-Dans votre projet, votre fichier `docker-compose.yml` comprend 6 services, répartis ainsi :
+<img height="600" src="./img.png" width="500"/>
+
+Dans le projet, le fichier `docker-compose.yml` comprend 6 services, répartis ainsi :
 
 ### 1. Services principaux (lancement applicatif)
 
