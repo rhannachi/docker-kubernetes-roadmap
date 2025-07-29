@@ -19,6 +19,7 @@ Dans votre projet, votre fichier `docker-compose.yml` comprend 6 services, répa
 Pour installer Laravel dans le dossier `src` grâce au service `composer-utility` :
 
 ```
+$ mkdir src
 $ docker compose run --rm composer-utility create-project laravel/laravel .
 ```
 
