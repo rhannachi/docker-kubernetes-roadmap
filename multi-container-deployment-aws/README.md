@@ -51,7 +51,8 @@ $ docker push rhannachi1991/gols-node:latest
     - `MONGO_INITDB_ROOT_USERNAME`
     - `MONGO_INITDB_ROOT_PASSWORD`
 #### 4. Healthcheck
-- `CMD-SHELL,mongosh --eval 'db.runCommand("ping").ok' --quiet` : Cette commande utilise le client mongosh pour exécuter la commande MongoDB ping. Elle vérifie que la base répond et fonctionne
+- dans le conteneur mongodb: `CMD-SHELL,mongosh --eval 'db.runCommand("ping").ok' --quiet` : Cette commande utilise le client mongosh pour exécuter la commande MongoDB ping. Elle vérifie que la base répond et fonctionne
+- dans le conteneur nodejs: `CMD-SHELL,curl --fail http://127.0.0.1:3000/healthcheck || exit 1`
 
 ![](./images/cluster-1.png)
 ![](./images/task-2.png)

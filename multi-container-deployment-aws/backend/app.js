@@ -19,6 +19,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/healthcheck', (req, res) => {
+  console.log("GET /healthcheck OK")
   res.status(200).send('OK');
 });
 

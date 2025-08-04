@@ -14,4 +14,7 @@ ENV MONGODB_USERNAME=root
 ENV MONGODB_PASSWORD=secret
 ENV MONGODB_URL=mongodb
 
+# ajouter curl pour le health check
+RUN apk add --no-cache curl
+
 CMD ["npm", "start"]
