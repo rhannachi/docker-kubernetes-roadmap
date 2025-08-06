@@ -18,3 +18,10 @@
 
 ### Laravel containerization
 - [exemple](./laravel-containerization/README.md)
+
+### ECS Aws
+- [exemple](./multi-container-deployment-aws/README.md)
+
+### Kubernetes
+- [exemple](./kubernetes/README.md)
+
