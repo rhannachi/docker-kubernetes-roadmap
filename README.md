@@ -23,7 +23,8 @@
 - [exemple](./multi-container-deployment-aws/README.md)
 
 ## Kubernetes
-#### [introduction](k8s/README.md)
-#### [Deployment](deployment-k8s/README.md)
-#### [Service](deployment-k8s/README-service.md)
+#### 1. [Introduction](k8s/README.md)
+#### 2. [Deployment](deployment-k8s/README.md)
+#### 3. [Service](deployment-k8s/README-service.md)
+#### 4. [Scaling](deployment-k8s/README-scaling.md)
 
