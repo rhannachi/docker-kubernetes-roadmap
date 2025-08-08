@@ -1,4 +1,4 @@
-# Docker
+## Docker
 
 ### Commande de base:
 - [exemple 1](./basic-command/node/README.md)
@@ -22,6 +22,8 @@
 ### ECS Aws
 - [exemple](./multi-container-deployment-aws/README.md)
 
-### Kubernetes
-- [exemple](./kubernetes/README.md)
+## Kubernetes
+#### [introduction](k8s/README.md)
+#### [Deployment](deployment-k8s/README.md)
+#### [Service](deployment-k8s/README-service.md)
 

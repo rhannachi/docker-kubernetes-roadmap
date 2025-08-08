@@ -82,9 +82,30 @@ Pour créer ou modifier les **objets Kubernetes**, on utilise deux approches :
 - Plutôt que de gérer **~~les Pods manuellement~~**, on utilise **les objets de contrôle** (comme Deployment, StatefulSet, ReplicaSet…) qui se chargent d’en **créer**, de les **remplacer** ou de les **supprimer** selon les besoins du cluster et les consignes de l’utilisateur.
 
 ## Installation
-TODO .....
-## Deployments
+L’installation d’un environnement Kubernetes local nécessite deux outils principaux : **kubectl** et **Minikube**.
 
+### 1. Installer kubectl
+kubectl est l’outil en ligne de commande permettant d’administrer Kubernetes.
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+### 2. Installer Minikube
+Minikube permet de lancer un cluster Kubernetes local, idéal pour le développement et les tests: https://minikube.sigs.k8s.io/docs/start/
+
+### 3. Démarrer Minikube avec Docker comme driver
+
+Assure-toi d’avoir Docker installé et fonctionnel sur ta machine.
+
+```
+$ minikube start --driver=docker
+$ minikube status
+```
+
+- `minikube start --driver=docker` : démarre un cluster Kubernetes local en utilisant Docker.
+- `minikube status` : affiche le statut du cluster local.
+
+Grâce à ce setup, tu peux expérimenter Kubernetes en local.
+
+## Deployments
 Un Deployment est un objet clé dans Kubernetes, car on ne crée généralement pas les Pods manuellement ni ne les place soi-même sur les worker nodes.\
 À la place, on définit un objet Deployment où l’on indique combien de Pods on souhaite, avec quels conteneurs (images), et Kubernetes se charge de créer automatiquement ces Pods et de les répartir sur les nœuds disponibles du cluster, en tenant compte des ressources (CPU, mémoire) nécessaires et disponibles sur chaque nœud.\ 
 Cela garantit que les Pods sont toujours lancés là où il y a assez d’espace et de mémoire.
