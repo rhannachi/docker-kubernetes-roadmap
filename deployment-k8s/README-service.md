@@ -1,4 +1,14 @@
 ## Service
+Quelles sont les limitations au niveau des Pods qui nous empêchent d'exposer notre conteneur vers l'extérieur ?
+- L'adresse IP du Pod change à chaque fois que le Pod est remplacé
+- Cette adresse IP est inaccessible depuis l'extérieur du cluster
+
+**C'est pour cela que le Service entre en jeu:**\
+Un Service est un objet Kubernetes, comme le Deployment, qui permet d'exposer un ou plusieurs Pods aux autres Pods du cluster, ou bien à un utilisateur externe.\
+Chaque Pod possède une adresse IP interne au cluster, mais ces adresses ont les limitations mentionnées ci-dessus.
+
+Les Services utilisent des sélecteurs pour identifier et regrouper des Pods ayant des labels spécifiques, puis leur attribuent une adresse IP stable et partagée.\
+Cette adresse IP ne change jamais. On peut donc créer un Service qui sélectionne les Pods souhaités via leurs labels, puis exposer cette adresse IP stable depuis l'extérieur pour rendre accessibles un ou plusieurs Pods.
 
 ``` 
 $ kubectl expose deployment first-app --type=LoadBalancer --port=8080
