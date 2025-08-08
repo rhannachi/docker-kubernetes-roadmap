@@ -171,4 +171,17 @@ deployment.apps/first-app rolled back
 - Le processus utilise un **rolling update** pour garantir **zéro downtime**
 - L'image `rhannachi1991/first-app-k8s:latest` sera **redéployée** sur tous les pods
 
+![](./images/img5.png)
 
+Pour supprimer le service et le déploiement individuellement :
+``` 
+$ kubectl delete deployment first-app
+deployment.apps "first-app" deleted
+
+$ kubectl delete service first-app
+service "first-app" deleted
+```
+ou
+``` 
+$ kubectl delete deployment,service first-app
+```
