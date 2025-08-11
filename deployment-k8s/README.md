@@ -1,5 +1,28 @@
 #  Deployment
 
+Un **Deployment** est un élément clé de Kubernetes, car on ne crée généralement pas les Pods à la main ni ne choisit soi-même sur quel nœud les placer.
+À la place, on définit un objet **Deployment** où l’on précise :
+
+- le nombre de Pods souhaité,
+- l’image du ou des conteneurs à lancer,
+- et éventuellement leurs ressources nécessaires (CPU, mémoire).
+
+Kubernetes se charge alors automatiquement de créer ces Pods et de les répartir sur les nœuds du cluster en fonction des ressources disponibles. Résultat : les Pods sont lancés là où il y a suffisamment de capacité.
+
+Un autre atout majeur d’un Deployment est la gestion simple des **mises à jour** et des **retours arrière** :
+
+- Si une nouvelle version de ton application pose problème, tu peux annuler le déploiement et revenir facilement à la version précédente.
+- Kubernetes restaure alors automatiquement l’état antérieur du cluster.
+
+Kubernetes propose aussi l’**autoscaling** via le **Horizontal Pod Autoscaler (HPA)** :
+
+- Il mesure automatiquement certaines métriques (comme l’usage CPU ou mémoire)
+- et ajuste le nombre de Pods pour s’adapter à la charge, sans intervention humaine.
+
+⚠️ À retenir : un Deployment gère **un groupe de Pods identiques** (même application).
+Si tu veux déployer plusieurs applications différentes, tu dois créer **un Deployment par application**.
+
+
 ```
 $ docker build -t rhannachi1991/first-app-k8s:latest .
 $ docker login

@@ -105,17 +105,3 @@ $ minikube status
 
 Grâce à ce setup, tu peux expérimenter Kubernetes en local.
 
-## Deployments
-Un Deployment est un objet clé dans Kubernetes, car on ne crée généralement pas les Pods manuellement ni ne les place soi-même sur les worker nodes.\
-À la place, on définit un objet Deployment où l’on indique combien de Pods on souhaite, avec quels conteneurs (images), et Kubernetes se charge de créer automatiquement ces Pods et de les répartir sur les nœuds disponibles du cluster, en tenant compte des ressources (CPU, mémoire) nécessaires et disponibles sur chaque nœud.\ 
-Cela garantit que les Pods sont toujours lancés là où il y a assez d’espace et de mémoire.
-
-Un autre avantage important du Deployment est la gestion simplifiée des mises à jour et des retours-arrière (rollback):\
-Par exemple, si une nouvelle version de ton application pose problème, tu peux très facilement annuler le déploiement et revenir à la version précédente du Deployment, ce qui rétablit automatiquement l’ancien état du cluster.
-
-Kubernetes permet aussi d’activer l’autoscaling des Pods via le Horizontal Pod Autoscaler:\
-Cette fonction surveille automatiquement certaines métriques (comme l’utilisation du CPU ou de la mémoire) et peut décider d’ajouter (ou retirer) des Pods pour s’adapter à la charge, sans intervention manuelle.
-
-Attention à une nuance importante : un Deployment sert à gérer un groupe de Pods identiques (par exemple, pour la même application).\
-Si tu as besoin que Kubernetes gère plusieurs types d’applications (différents Pods), tu dois créer plusieurs objets Deployment, chacun associé à sa propre définition de Pods.
-
