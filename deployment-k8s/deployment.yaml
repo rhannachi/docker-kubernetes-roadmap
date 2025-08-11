@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+# kind: spécifie le type d'objet Kubernetes (ici, Deployment)
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  # replicas: définit le nombre d'instances (Pods) qu'on veut faire tourner
+  replicas: 1
+  selector:
+    # matchLabels: critères de sélection que le Deployment utilise pour identifier quels Pods il doit gérer
+    # si un pod n'a pas les 2 clé/valeur "app:second-app-pod" et "tier:backend" ne sera pas contrôlé par notre objet de deployment "second-app-deployment"
+    matchLabels:
+      app: second-app-pod
+      tier: backend
+      # toto: valeur # "label supplémentaire" -> si décommenté, le Deployment chercherait aussi les Pods ayant "toto:valeur"
+  # template: modèle (Pod Template) utilisé pour créer les nouveaux Pods
+  template:
+    metadata:
+      # labels: étiquettes appliquées aux Pods créés par ce Deployment
+      # Ces labels permettent d'identifier et de sélectionner les Pods individuellement
+      # Tu peux mettre n'importe quelle paire clé/valeur MAIS avec des restrictions de format
+      labels:
+        app: second-app-pod
+        tier: backend
+        # toto: valeur  # "label template commenté" -> si décommenté, chaque Pod créé aurait aussi le label "toto:valeur"
+        # IMPORTANT: Les labels ici doivent inclure au minimum ceux définis dans selector.matchLabels
+    spec:
+      containers:
+        - name: second-nodejs-container
+          image: rhannachi1991/first-app-k8s:latest
+# ajouter plusieurs containers/images à un même deployment - syntaxe pour un deuxième container
+#        - name: second-container
+#          image: rhannachi1991/second-image:latest

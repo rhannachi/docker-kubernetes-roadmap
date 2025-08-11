@@ -17,4 +17,6 @@
 #### 3. [Service](deployment-k8s/README-3-service.md)
 #### 4. [Scaling](deployment-k8s/README-4-scaling.md)
 #### 5. [Rollbacks](deployment-k8s/README-5-rollbacks.md)
+#### 6. [Aproche déclarative](deployment-k8s/README-6-declarative-yaml.md)
+
 
