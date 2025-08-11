@@ -19,9 +19,12 @@ Kubernetes propose aussi l’**autoscaling** via le **Horizontal Pod Autoscaler 
 - Il mesure automatiquement certaines métriques (comme l’usage CPU ou mémoire)
 - et ajuste le nombre de Pods pour s’adapter à la charge, sans intervention humaine.
 
-⚠️ À retenir : un Deployment gère **un groupe de Pods identiques** (même application).
+⚠️ **À retenir :** 
+- un Deployment gère **un groupe de Pods identiques** (même application).
 Si tu veux déployer plusieurs applications différentes, tu dois créer **un Deployment par application**.
+- Un Deployment Kubernetes est conçu pour gérer **"un ensemble de Pods identiques"**
 
+---
 
 ```
 $ docker build -t rhannachi1991/first-app-k8s:latest .

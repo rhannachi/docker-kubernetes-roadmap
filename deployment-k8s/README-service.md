@@ -4,11 +4,24 @@ Quelles sont les limitations au niveau des Pods qui nous empêchent d'exposer no
 - Cette adresse IP est inaccessible depuis l'extérieur du cluster
 
 **C'est pour cela que le Service entre en jeu:**\
-Un Service est un objet Kubernetes, comme le Deployment, qui permet d'exposer un ou plusieurs Pods aux autres Pods du cluster, ou bien à un utilisateur externe.\
-Chaque Pod possède une adresse IP interne au cluster, mais ces adresses ont les limitations mentionnées ci-dessus.
+Un **Service** dans Kubernetes est un objet (comme un Deployment) qui permet de **regrouper un ensemble de Pods** appartenant au même type **grâce aux labels et sélecteurs**. Il les expose ensuite via une **adresse IP stable** qui peut être interne au cluster ou externe (selon le type de Service choisi).
 
-Les Services utilisent des sélecteurs pour identifier et regrouper des Pods ayant des labels spécifiques, puis leur attribuent une adresse IP stable et partagée.\
-Cette adresse IP ne change jamais. On peut donc créer un Service qui sélectionne les Pods souhaités via leurs labels, puis exposer cette adresse IP stable depuis l'extérieur pour rendre accessibles un ou plusieurs Pods.
+Le Service résout **deux problématiques majeures** des Pods par défaut :
+
+1. **Les Pods ne sont pas directement accessibles depuis l'extérieur** du cluster
+2. **L'adresse IP des Pods change** à chaque redémarrage ou recréation
+
+#### Types de Services et Exposition
+
+Kubernetes propose plusieurs **types de Services** :
+
+- **ClusterIP** (par défaut) : Expose le Service uniquement à l'intérieur du cluster avec une IP interne stable
+
+- **NodePort** : Expose le Service sur chaque nœud du cluster via un port statique, permettant l'accès depuis l'extérieur
+
+- **LoadBalancer** : Crée un load balancer externe (généralement via un fournisseur cloud) pour exposer le Service avec une IP publique
+
+- **ExternalName** : Mappe le Service vers un nom DNS externe
 
 ``` 
 $ kubectl expose deployment first-app --type=LoadBalancer --port=8080
