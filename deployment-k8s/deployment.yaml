@@ -8,7 +8,8 @@ spec:
   replicas: 1
   selector:
     # matchLabels: critères de sélection que le Deployment utilise pour identifier quels Pods il doit gérer
-    # si un pod n'a pas les 2 clé/valeur "app:second-app-pod" et "tier:backend" ne sera pas contrôlé par notre objet de deployment "second-app-deployment"
+    # Si un Pod n'a pas TOUS les labels clé/valeur "app:second-app-pod" ET "tier:backend", il ne sera pas contrôlé par ce Deployment
+    # Pour qu'un Pod soit sélectionné, il doit posséder TOUS les labels spécifiés ici (logique ET, pas OU)
     matchLabels:
       app: second-app-pod
       tier: backend

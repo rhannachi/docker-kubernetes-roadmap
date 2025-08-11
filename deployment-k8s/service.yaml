@@ -1,0 +1,24 @@
+apiVersion: v1
+# kind: spécifie le type d'objet Kubernetes (ici, Service)
+kind: Service
+metadata:
+  name: backend
+spec:
+  selector:
+    # Le selector indique les labels des Pods vers lesquels le Service doit envoyer le trafic.
+    # Pour qu’un Pod soit ciblé, il doit posséder TOUS les labels spécifiés ici (ET logique, pas OU).
+    app: second-app-pod
+  # ports : liste des ports que le Service expose.
+  ports:
+    - protocol: TCP
+      # port : le port sur lequel le Service sera accessible à l’extérieur/l’intérieur du cluster (ici 80 pour HTTP).
+      port: 80 # HTTP
+      # targetPort : port sur lequel l’application à l’intérieur des Pods écoute (ici notre app Node.js écoute sur 8080).
+      targetPort: 8080
+    # Exemple si on voulait aussi exposer un port pour HTTPS :
+    # - protocol: TCP
+    #   port: 443  # HTTPS
+    #   targetPort: 8443
+  # type : définit le mode d'exposition du Service.
+  # LoadBalancer = crée un load balancer externe (IP publique) via le cloud provider, pour exposer le Service à l’extérieur du cluster.
+  type: LoadBalancer
