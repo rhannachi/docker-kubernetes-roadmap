@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-pod
+  template:
+    metadata:
+      labels:
+        app: node-pod
+    spec:
+      containers:
+        - name: node-container
+          image: rhannachi1991/k8s-2:latest
+          # Le champ containerPort est informatif (pas obligatoire) - il documente quel port l'application utilise
+          # Le nom "web-port" permet de référencer ce port par nom dans les services et health checks
+          ports:
+            - containerPort: 3000
+              name: web-port
+
+          # Health Checks - Vérifications de santé de l'application
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: web-port  # Utilisation du nom de port pour plus de flexibilité
+            initialDelaySeconds: 30
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-service
+spec:
+  selector:
+    app: node-pod
+  ports:
+    - protocol: TCP
+      port: 80           # Port du service (accès externe)
+      targetPort: web-port  # Port du conteneur (référence par nom)
+  type: LoadBalancer

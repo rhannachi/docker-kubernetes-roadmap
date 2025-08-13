@@ -12,11 +12,12 @@
 #### 7. [ECS Aws](./multi-container-deployment-aws/README.md)
 
 ## Kubernetes
-#### 1. [Introduction](deployment-k8s/README-1-introduction.md)
-#### 2. [Deployment](deployment-k8s/README-2-deployment.md)
-#### 3. [Service](deployment-k8s/README-3-service.md)
-#### 4. [Scaling](deployment-k8s/README-4-scaling.md)
-#### 5. [Rollbacks](deployment-k8s/README-5-rollbacks.md)
-#### 6. [Aproche déclarative](deployment-k8s/README-6-declarative-yaml.md)
+#### 1. [Introduction](k8s-1/README-1-introduction.md)
+#### 2. [Deployment](k8s-1/README-2-deployment.md)
+#### 3. [Service](k8s-1/README-3-service.md)
+#### 4. [Scaling](k8s-1/README-4-scaling.md)
+#### 5. [Rollbacks](k8s-1/README-5-rollbacks.md)
+#### 6. [Aproche déclarative](k8s-1/README-6-declarative-yaml.md)
+#### 7. [Health Checks](k8s-2/README.md)
 
 
