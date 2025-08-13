@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-deployment
+  labels:
+    group: node-deployment-group
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      pod: node-pod
+  template:
+    metadata:
+      labels:
+        pod: node-pod
+    spec:
+      containers:
+        - name: node-container
+          image: rhannachi1991/first-app-k8s:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-service
+  labels:
+    group: node-deployment-group
+spec:
+  selector:
+    pod: node-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer

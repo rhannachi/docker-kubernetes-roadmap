@@ -42,3 +42,24 @@ $ minikube service backend
 |-----------|---------|-------------|---------------------------|
 🎉  Ouverture du service default/backend dans le navigateur par défaut...
 ```
+
+Pour supprimer des ressources Kubernetes créées de manière déclarative grâce à des fichiers YAML (par exemple, deployment.yaml et service.yaml), la commande que tu as utilisée est correcte :
+```
+$ kubectl delete -f=deployment.yaml,service.yaml 
+deployment.apps "second-app-deployment" deleted
+service "backend" deleted
+```
+
+### Analyse du fichier `multi.yaml`
+
+Dans `spec.template.metadata.labels` de la première partie `kind: Deployment`, on a ajouté un label unique `pod: node-pod` qui nous permet d'identifier les pods créés par ce deployment.
+
+Ce label doit être présent dans `spec.selector.matchLabels` pour indiquer au deployment quels pods il doit gérer. Cette correspondance est **obligatoire** en Kubernetes - les labels du template et les matchLabels du selector doivent être identiques.
+
+Il doit également être présent dans `spec.selector` de la deuxième partie `kind: Service` pour que le service puisse router le trafic vers les bons pods.
+
+On a aussi ajouté un label `group: node-deployment-group` aux parties `kind: Deployment` et `kind: Service` pour réunir ces deux ressources Kubernetes sous un même label. Cela permet de facilement les manipuler ensemble, par exemple pour les supprimer en les ciblant directement par label :
+
+```
+$ kubectl delete deployments,services -l group=node-deployment-group
+```
