@@ -15,6 +15,7 @@ spec:
       containers:
         - name: node-container
           image: rhannachi1991/k8s-2:latest
+
           # Le champ containerPort est informatif (pas obligatoire) - il documente quel port l'application utilise
           # Le nom "web-port" permet de référencer ce port par nom dans les services et health checks
           ports:

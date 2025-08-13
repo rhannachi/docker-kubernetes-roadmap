@@ -15,5 +15,10 @@ Rôle : Vérifie si le conteneur fonctionne correctement\
 Action en cas d'échec : Redémarre le conteneur\
 Question posée : "L'application est-elle dans un état fonctionnel ?"
 
-#### Note:
-Même si notre container tourne sur le port 3000, on n'est pas obligé de l'indiquer dans la configuration `kind: Deployment` (mais il est fortement recommandé).
+**Note**: Même si notre container tourne sur le port 3000, on n'est pas obligé de l'indiquer dans la configuration `kind: Deployment` (mais il est fortement recommandé).
+
+```
+==> /error
+```
+
+![](./images/1.png)
