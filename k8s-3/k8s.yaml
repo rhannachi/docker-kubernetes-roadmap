@@ -12,16 +12,28 @@ spec:
       labels:
         app: story-pod
     spec:
+      # volumes : liste des volumes que l’on souhaite mettre à disposition des conteneurs de ce Pod
+      volumes:
+        - name: story-volume
+          emptyDir: {} # ici, on déclare un volume de type "emptyDir" (dossier vide créé sur le nœud, supprimé lorsque le Pod est détruit)
       containers:
         - name: story-container
           image: rhannachi1991/k8s-story:latest
           ports:
             - containerPort: 3000
               name: web-port
+          volumeMounts:
+            - mountPath: /app/story # chemin à l'intérieur du conteneur où le volume sera monté
+              name: story-volume    # nom du volume déclaré dans la section "volumes"
+
+          # LivenessProbe : permet à Kubernetes de vérifier si le conteneur est toujours en vie.
+          # Si la sonde échoue, Kubernetes redémarre le conteneur.
           livenessProbe:
             httpGet:
               port: web-port
               path: /healthcheck
+          # ReadinessProbe : permet à Kubernetes de savoir si l'application est prête à recevoir du trafic.
+          # Si la sonde échoue, le Pod est retiré des endpoints de service.
           readinessProbe:
             httpGet:
               port: web-port
@@ -38,4 +50,4 @@ spec:
     - port: 80
       protocol: TCP
       targetPort: web-port
-  type: LoadBalancer
+  type: LoadBalancer # expose le service publiquement avec une IP externe (Cloud Provider requis)
