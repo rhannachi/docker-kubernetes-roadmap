@@ -60,6 +60,24 @@ Ainsi, le volume n’est plus stocké uniquement au niveau du Pod, mais directem
 Il faut préférer un **PersistentVolume** ([PV](*./host-pv-3.yaml*)) et un **PersistentVolumeClaim** ([PVC](*./host-pvc-3.yaml*)) pour rendre la persistance **cluster-scoped**, portable et sécurisée.
 
 **Note importante** : Cependant, même avec un PV/PVC utilisant `hostPath`, **le stockage physique reste sur le worker node**. Cette approche améliore la gestion (abstraction cluster-wide), mais n'élimine pas la dépendance au nœud.
+``` 
+  host-pv-3.yaml
+
+  hostPath:
+    path: /data
+    type: DirectoryOrCreate
+```
+
+Pour ne pas faire du stockage physique sur le worker node, il faut utiliser à la place de `hostPath` :
+— **un volume réseau ou cloud**, par exemple :
+- `nfs` (Network File System)
+- `awsElasticBlockStore` (EBS sur AWS)
+- `csi` (Container Storage Interface driver, type EFS, S3, etc.)
+- `azureDisk`, `azureFile`
+- `gcePersistentDisk` (Google Cloud)
+- `cephfs`, `iscsi`, `glusterfs`…
+
+Ces types permettent au volume d’être **stocké en dehors des worker nodes** (sur un NAS, un SAN, un service Cloud externalisé, etc.), ce qui assure la persistance et la portabilité des données même si un worker node disparaît ou change.
 
 #### storageClassName
 
