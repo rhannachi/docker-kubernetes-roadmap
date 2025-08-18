@@ -6,7 +6,9 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-const filePath = path.join(__dirname, 'story', 'text.txt');
+// On utilisera cette variable d’environnement dans la partie variables d’environnement de la documentation kubernetes :
+// process.env?.STORY_FOLDER
+const filePath = path.join(__dirname, process.env?.STORY_FOLDER ?? 'story', 'text.txt');
 
 app.use(bodyParser.json());
 
