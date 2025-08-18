@@ -15,5 +15,8 @@
         value: 'fff'
 ```
 
+#### Note: 
+-  il n’est pas possible de rendre `mountPath` dynamique directement via une variable d’environnement dans la définition du Pod ou du Deployment YAML.
+
 ![](./images/image-env.png)
 
