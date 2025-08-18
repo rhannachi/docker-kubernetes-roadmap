@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  # ReadWriteOnce : signifie que le volume peut être monté en lecture/écriture par un seul nœud à la fois
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+  hostPath:
+    path: /data
+    type: DirectoryOrCreate

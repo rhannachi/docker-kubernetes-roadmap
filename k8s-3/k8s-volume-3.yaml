@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: story-pod
+  template:
+    metadata:
+      labels:
+        app: story-pod
+    spec:
+      # volumes : référence à un PersistentVolumeClaim
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
+      containers:
+        - name: story-container
+          image: rhannachi1991/k8s-story:latest
+          ports:
+            - containerPort: 3000
+              name: web-port
+          volumeMounts:
+            - mountPath: /app/story
+              name: story-volume
+          livenessProbe:
+            httpGet:
+              port: web-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: web-port
+              path: /healthcheck
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-service
+spec:
+  selector:
+    app: story-pod
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: web-port
+  type: LoadBalancer
