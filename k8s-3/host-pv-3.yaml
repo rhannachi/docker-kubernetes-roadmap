@@ -10,6 +10,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   storageClassName: standard
+  # on utilisant hostPath, le stockage physique reste sur le worker node.
   hostPath:
     path: /data
     type: DirectoryOrCreate

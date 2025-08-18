@@ -5,10 +5,11 @@ Cela entraîne donc la suppression des volumes directement attachés aux Pods.
 
 C’est pour cette raison que, dans Kubernetes, il existe [différents types de volumes](https://kubernetes.io/docs/concepts/storage/) permettant de répondre à des besoins variés.
 
-Nous allons nous concentrer principalement sur **trois types de volumes** :
-- **CSI**
+Nous allons nous concentrer principalement sur **deux types de volumes** :
 - **emptyDir**
 - **hostPath**
+
+On verra aussi les PV et PVC, des objets Kubernetes qui servent à abstraire et à gérer le stockage dans un cluster.
 
 **Commençons par créer notre application**:
 ``` 
@@ -32,6 +33,7 @@ Avant d'ajouter un volume, faisons un petit test pour montrer qu’on perd les d
 ![](./images/2.png)
 
 ## Avec volume
+
 ### 1. emptyDir
 [k8s.yaml](k8s-volume-1.yaml)\
 Après avoir ajouté la section `volumes` de type "**emptyDir**" dans la ressource `kind: Deployment`, on constate que même si le conteneur plante via l’endpoint `GET /error`, le Pod recrée un nouveau conteneur sans perte de données.
@@ -46,8 +48,11 @@ Une des solutions consiste à utiliser un volume de type hostPath avec `type: Di
 Cette approche permet de créer automatiquement le répertoire sur le `worker node` s’il n’existe pas.\
 Ainsi, le volume n’est plus stocké uniquement au niveau du Pod, mais directement sur le système de fichiers du nœud, ce qui garantit la persistance des données tant que le Pod est recréé sur le même nœud.
 
-### 3. Persistent volume
+### 3. Persistent volume PV et PVC
 [k8s-volume-3.yaml](*./k8s-volume-3.yaml*), [host-pv-3.yaml](*./host-pv-3.yaml*), [host-pvc-3.yaml](*./host-pvc-3.yaml*)
+
+PV = stockage physique ou abstrait disponible dans le cluster
+PVC = demande d’espace de stockage faite par un pod ou un utilisateur
 
 #### Pourquoi `hostPath` n'est pas la solution idéale pour la persistance des données
 
@@ -90,7 +95,6 @@ $ kubectl get storageclass
 NAME                 PROVISIONER                RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
 standard (default)   k8s.io/minikube-hostpath   Delete          Immediate           false                  8d
 ```
-
 
 #### storage
 
