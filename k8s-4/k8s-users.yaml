@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-pod
+  template:
+    metadata:
+      labels:
+        app: users-pod
+    spec:
+      containers:
+        - name: users-container
+          image: rhannachi1991/users-net-k8s:latest
+          ports:
+            - containerPort: 8080
+              name: users-port
+          livenessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: users-pod
+  ports:
+    - port: 8080
+      targetPort: users-port
+      protocol: TCP
