@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: story-pod
+  template:
+    metadata:
+      labels:
+        app: story-pod
+    spec:
+      volumes:
+        - name: story-volume
+          emptyDir: {}
+      containers:
+        - name: story-container
+          image: rhannachi1991/k8s-story:env
+          ports:
+            - containerPort: 3000
+              name: web-port
+          volumeMounts:
+            - mountPath: /app/story # chemin à l'intérieur du conteneur où le volume sera monté
+              name: story-volume    # nom du volume déclaré dans la section "volumes"
+          env:
+            # Déclare une variable d'environnement appelée STORY_FOLDER
+            # Cette variable sera injectée dans le conteneur et accessible via "process.env?.STORY_FOLDER"
+            - name: STORY_FOLDER
+              # value: 'story'
+              valueFrom:
+                # Utilise 'configMapKeyRef' pour faire référence à un fichier de type ConfigMap 'config-map.yaml'
+                configMapKeyRef:
+                  # 'name' correspond au nom de la ressource ConfigMap à utiliser
+                  name: story-config-map
+                  # 'key' indique la clé exacte dans le ConfigMap dont la valeur 'folder' sera injectée
+                  key: folder
+          livenessProbe:
+            httpGet:
+              port: web-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: web-port
+              path: /healthcheck
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: story-service
+spec:
+  selector:
+    app: story-pod
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: web-port
+  type: LoadBalancer

@@ -1,5 +1,5 @@
 ## Env
-
+[k8s-env.yaml](k8s-env.yaml)
 
 ```
     k8s-env.yaml :
@@ -20,3 +20,14 @@
 
 ![](./images/image-env.png)
 
+### ConfigMaps
+[k8s-env-2.yaml](k8s-env-2.yaml), [config-map.yaml](config-map.yaml)
+
+On peut externaliser nos variables d’environnement dans un fichier `config-map.yaml` de type "ConfigMap", puis les réutiliser ensuite dans notre configuration de déploiement `k8s-env-2.yaml` en les injectant comme variables d’environnement dans le conteneur.
+
+```
+$ kubectl apply -f=k8s-env-2.yaml,config-map.yaml
+deployment.apps/story-deployment created
+service/story-service created
+configmap/story-config-map created
+```
