@@ -31,3 +31,7 @@ deployment.apps/story-deployment created
 service/story-service created
 configmap/story-config-map created
 ```
+
+```
+$ minikube service story-service
+```

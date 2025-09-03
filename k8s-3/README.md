@@ -48,12 +48,6 @@ Une des solutions consiste à utiliser un volume de type hostPath avec `type: Di
 Cette approche permet de créer automatiquement le répertoire sur le `worker node` s’il n’existe pas.\
 Ainsi, le volume n’est plus stocké uniquement au niveau du Pod, mais directement sur le système de fichiers du nœud, ce qui garantit la persistance des données tant que le Pod est recréé sur le même nœud.
 
-### 3. Persistent volume PV et PVC
-[k8s-volume-3.yaml](*./k8s-volume-3.yaml*), [host-pv-3.yaml](*./host-pv-3.yaml*), [host-pvc-3.yaml](*./host-pvc-3.yaml*)
-
-PV = stockage physique ou abstrait disponible dans le cluster
-PVC = demande d’espace de stockage faite par un pod ou un utilisateur
-
 #### Pourquoi `hostPath` n'est pas la solution idéale pour la persistance des données
 
 - **Dépendance au nœud** : Le volume `hostPath` monte un dossier local du worker node dans le Pod. Si le Pod est déplacé (reschedulé) sur un autre nœud, il n'aura pas accès aux données du chemin défini sur le précédent nœud.
@@ -64,7 +58,16 @@ PVC = demande d’espace de stockage faite par un pod ou un utilisateur
 
 Il faut préférer un **PersistentVolume** ([PV](*./host-pv-3.yaml*)) et un **PersistentVolumeClaim** ([PVC](*./host-pvc-3.yaml*)) pour rendre la persistance **cluster-scoped**, portable et sécurisée.
 
-**Note importante** : Cependant, même avec un PV/PVC utilisant `hostPath`, **le stockage physique reste sur le worker node**. Cette approche améliore la gestion (abstraction cluster-wide), mais n'élimine pas la dépendance au nœud.
+### 3. Persistent volume PV et PVC
+[k8s-volume-3.yaml](*./k8s-volume-3.yaml*), [host-pv-3.yaml](*./host-pv-3.yaml*), [host-pvc-3.yaml](*./host-pvc-3.yaml*)
+
+PV = stockage physique ou abstrait disponible dans le cluster\
+PVC = demande d’espace de stockage faite par un pod ou un utilisateur
+
+Comme vu précédemment, les volumes standards déclarés dans la `spec` d’un Pod sont attachés au Pod ou au Node, ce qui limite leur "**durée de vie**" et leur "**portabilité**".
+Pour s’affranchir de cette limitation, on utilise des PV et PVC qui permettent d’intégrer du stockage externe: les données ne sont pas forcément stockées localement sur un nœud du cluster, mais peuvent être hébergées sur un système de fichiers réseau (NFS, disque cloud, SAN, etc.) ou toute autre technologie compatible avec Kubernetes.
+
+Pour des raisons pédagogiques, on va apprendre à utiliser PV et PVC avec un volume de type `hostPath` **(stockage physique local sur le worker node)**, mais il est tout à fait possible d’utiliser d’autres types de volume, notamment des volumes cloud (EBS, EFS, Azure Disk, GCEPersistentDisk, etc.) pour une vraie persistance et portabilité des données dans un environnement de production.
 ``` 
   host-pv-3.yaml
 
