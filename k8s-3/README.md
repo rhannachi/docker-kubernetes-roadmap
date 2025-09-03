@@ -35,7 +35,7 @@ Avant d'ajouter un volume, faisons un petit test pour montrer qu’on perd les d
 ## Avec volume
 
 ### 1. emptyDir
-[k8s.yaml](k8s-volume-1.yaml)\
+[k8s-volume-1.yaml](k8s-volume-1.yaml)\
 Après avoir ajouté la section `volumes` de type "**emptyDir**" dans la ressource `kind: Deployment`, on constate que même si le conteneur plante via l’endpoint `GET /error`, le Pod recrée un nouveau conteneur sans perte de données.
 En effet, le volume "**emptyDir**" appartient au Pod et non au conteneur : lorsque ce dernier est remplacé, le volume reste attaché et monté dans le nouveau conteneur, ce qui permet de conserver les informations.
 

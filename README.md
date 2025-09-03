@@ -19,5 +19,7 @@
 #### 5. [Rollbacks](k8s-1/README-5-rollbacks.md)
 #### 6. [Aproche déclarative](k8s-1/README-6-declarative-yaml.md)
 #### 7. [Health Checks](k8s-2/README.md)
+#### 8. [Volume](k8s-3/README.md)
+#### 9. [Env](k8s-3/README-env.md)
 
 
