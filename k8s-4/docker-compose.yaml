@@ -12,6 +12,10 @@ services:
     build: ./tasks-api
     ports: 
       - "8000:8000"
+    volumes:
+      - tasks:/app/tasks
     environment:
       TASKS_FOLDER: tasks
       AUTH_API_URL: auth
+volumes:
+  tasks:
