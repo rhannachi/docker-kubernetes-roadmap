@@ -11,13 +11,18 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.get('/healthcheck', (req, res) => {
+  console.log("GET /healthcheck OK")
+  res.status(200).send('OK');
+});
+
 const extractAndVerifyToken = async (headers) => {
   if (!headers.authorization) {
     throw new Error('No token provided.');
   }
   const token = headers.authorization.split(' ')[1]; // expects Bearer TOKEN
 
-  const response = await axios.get('http://auth/verify-token/' + token);
+  const response = await axios.get(`http://${process.env.AUTH_API_URL}/verify-token/` + token);
   return response.data.uid;
 };
 

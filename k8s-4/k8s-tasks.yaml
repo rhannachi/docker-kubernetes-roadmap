@@ -1,45 +1,55 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: users-deployment
+  name: tasks-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: users-pod
+      app: tasks-pod
   template:
     metadata:
       labels:
-        app: users-pod
+        app: tasks-pod
     spec:
+      volumes:
+        - name: tasks-volumes
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
       containers:
-        - name: users-container
-          image: rhannachi1991/users-net-k8s:1.0.0
+        - name: tasks-container
+          image: rhannachi1991/tasks-net-k8s:latest
+          volumeMounts:
+            - mountPath: /app/tasks
+              name: tasks-volumes
           env:
             - name: AUTH_API_URL
               # Utilisation du nom DNS du service Auth API pour la communication
               value: 'auth-service:80'
+            - name: TASKS_FOLDER
+              value: 'tasks'
           ports:
-            - containerPort: 8080
-              name: users-port
+            - containerPort: 8000
+              name: tasks-port
           livenessProbe:
             httpGet:
-              port: users-port
+              port: tasks-port
               path: /healthcheck
           readinessProbe:
             httpGet:
-              port: users-port
+              port: tasks-port
               path: /healthcheck
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: users-service
+  name: tasks-service
 spec:
   type: LoadBalancer
   selector:
-    app: users-pod
+    app: tasks-pod
   ports:
     - port: 8080
-      targetPort: users-port
+      targetPort: tasks-port
       protocol: TCP

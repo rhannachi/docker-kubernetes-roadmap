@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-pod
+  template:
+    metadata:
+      labels:
+        app: auth-pod
+    spec:
+      containers:
+        - name: auth-container
+          image: rhannachi1991/auth-net-k8s:latest
+          ports:
+            - containerPort: 80
+              name: auth-port
+          livenessProbe:
+            httpGet:
+              port: auth-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: auth-port
+              path: /healthcheck
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  # ClusterIP: Idéal pour exposer un service uniquement aux autres pods du cluster
+  type: ClusterIP
+  selector:
+    app: auth-pod
+  ports:
+    - port: 80             # Port d'accès du service
+      targetPort: auth-port  # Port exposé par le conteneur Auth API
+      protocol: TCP

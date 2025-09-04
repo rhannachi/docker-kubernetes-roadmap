@@ -17,8 +17,7 @@ spec:
           image: rhannachi1991/users-net-k8s:1.0.0
           env:
             - name: AUTH_API_URL
-              # Utilisation du nom DNS du service Auth API pour la communication
-              value: 'auth-service:80'
+              value: 'localhost'
           ports:
             - containerPort: 8080
               name: users-port
@@ -29,6 +28,19 @@ spec:
           readinessProbe:
             httpGet:
               port: users-port
+              path: /healthcheck
+        - name: auth-container
+          image: rhannachi1991/auth-net-k8s:latest
+          ports:
+            - containerPort: 80
+              name: auth-port
+          livenessProbe:
+            httpGet:
+              port: auth-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: auth-port
               path: /healthcheck
 ---
 apiVersion: v1
