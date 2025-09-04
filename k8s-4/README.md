@@ -47,3 +47,7 @@ C’est pour cette raison que la variable d’environnement `AUTH_API_URL` dans 
         - name: auth-container
           image: rhannachi1991/auth-net-k8s:latest
 ```
+[postman-collection-api.json](./postman-collection-api.json)
+
+![image-1.png](images/image-1.png)
+
