@@ -5,6 +5,11 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.get('/healthcheck', (req, res) => {
+  console.log("GET /healthcheck OK")
+  res.status(200).send('OK');
+});
+
 app.get('/verify-token/:token', (req, res) => {
   const token = req.params.token;
 
