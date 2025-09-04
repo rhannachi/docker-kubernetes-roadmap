@@ -7,7 +7,7 @@
   },
   "item": [
     {
-      "name": "Login",
+      "name": "user Login",
       "event": [
         {
           "listen": "test",
@@ -35,9 +35,9 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/login",
+          "raw": "{{users_base_url}}/login",
           "host": [
-            "{{base_url}}"
+            "{{users_base_url}}"
           ],
           "path": [
             "login"
@@ -48,7 +48,7 @@
       "response": []
     },
     {
-      "name": "Signup",
+      "name": "user Signup",
       "event": [
         {
           "listen": "test",
@@ -76,9 +76,9 @@
           }
         },
         "url": {
-          "raw": "{{base_url}}/signup",
+          "raw": "{{users_base_url}}/signup",
           "host": [
-            "{{base_url}}"
+            "{{users_base_url}}"
           ],
           "path": [
             "signup"
@@ -115,8 +115,13 @@
       "value": "1"
     },
     {
-      "key": "base_url",
+      "key": "users_base_url",
       "value": "http://192.168.49.2:31738"
+    },
+    {
+      "key": "tasks_base_url",
+      "value": "http://192.168.49.2:31216",
+      "type": "string"
     }
   ]
 }
