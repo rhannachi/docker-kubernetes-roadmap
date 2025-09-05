@@ -26,7 +26,7 @@ spec:
           env:
             - name: AUTH_API_URL
               # Utilisation du nom DNS du service Auth API pour la communication
-              value: 'auth-service:80'
+              value: 'http://auth-service:80'
             - name: TASKS_FOLDER
               value: 'tasks'
           ports:

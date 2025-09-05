@@ -40,3 +40,4 @@ app.get('/hashed-password/:password', (req, res) => {
 });
 
 app.listen(80);
+console.log('auth API listen on port ', 80);

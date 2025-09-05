@@ -1,21 +1,40 @@
 version: "3"
 services:
+  front-end:
+    build:
+      context: ./front-end
+      # Dans le cas d’une application front React (avec Create React App), il faut passer la variable d’environnement au moment de la build parce que
+      # Le front React est une application statique compilée lors du build (npm run build).
+      args:
+        REACT_APP_TASKS_API_URL: "http://localhost:8000"
+    # environment:
+    #  REACT_APP_TASKS_API_URL: "http://localhost:8000"
+    ports:
+      - "3000:80"
+    depends_on:
+      - tasks
   auth:
     build: ./auth-api
+    ports:
+      - "80:80"
   users:
     build: ./users-api
     environment:
-      AUTH_API_URL: auth
-    ports: 
+      AUTH_API_URL: "http://auth:80"
+    ports:
       - "8080:8080"
+    depends_on:
+      - auth       # users démarre après auth
   tasks:
     build: ./tasks-api
-    ports: 
+    ports:
       - "8000:8000"
     volumes:
       - tasks:/app/tasks
     environment:
       TASKS_FOLDER: tasks
-      AUTH_API_URL: auth
+      AUTH_API_URL: "http://auth:80"
+    depends_on:
+      - auth       # tasks démarre après auth
 volumes:
   tasks:

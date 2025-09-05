@@ -44,7 +44,7 @@ C’est pour cette raison que la variable d’environnement `AUTH_API_URL` dans 
     spec:
       containers:
         - name: users-container
-          image: rhannachi1991/users-net-k8s:1.0.0
+          image: rhannachi1991/users-net-k8s:latest
           env:
             - name: AUTH_API_URL
               value: 'localhost'
@@ -170,7 +170,7 @@ k8s-users.yaml
     spec:
       containers:
         - name: users-container
-          image: rhannachi1991/users-net-k8s:1.0.0
+          image: rhannachi1991/users-net-k8s:latest
           env:
             - name: AUTH_API_URL
               # Utilisation du nom DNS du service Auth API pour la communication

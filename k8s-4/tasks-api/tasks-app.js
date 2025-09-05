@@ -1,13 +1,24 @@
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 
 const express = require('express');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 
-const filePath = path.join(__dirname, process.env.TASKS_FOLDER, 'tasks.txt');
+const AUTH_API_URL = process.env.AUTH_API_URL
+const TASKS_FOLDER = process.env.TASKS_FOLDER
+console.log('AUTH_API_URL: ', AUTH_API_URL);
+console.log('TASKS_FOLDER: ', TASKS_FOLDER);
+
+const filePath = path.join(__dirname, TASKS_FOLDER, 'tasks.txt');
 
 const app = express();
+// pour autoriser UNE origine spécifique "Front-End" :
+app.use(cors({
+  // TODO !!!!!!!!!!!!
+  origin: 'http://localhost:3000'
+}));
 
 app.use(bodyParser.json());
 
@@ -22,7 +33,7 @@ const extractAndVerifyToken = async (headers) => {
   }
   const token = headers.authorization.split(' ')[1]; // expects Bearer TOKEN
 
-  const response = await axios.get(`http://${process.env.AUTH_API_URL}/verify-token/` + token);
+  const response = await axios.get(`${AUTH_API_URL}/verify-token/` + token);
   return response.data.uid;
 };
 
@@ -67,3 +78,4 @@ app.post('/tasks', async (req, res) => {
 });
 
 app.listen(8000);
+console.log('tasks API listen on port ', 8000);
