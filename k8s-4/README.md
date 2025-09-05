@@ -194,3 +194,47 @@ Ces variables d’environnement permettent d’accéder dynamiquement aux adress
 Dans notre code Node.js (`tasks-app.js` et `users-app.js`), il suffit d’utiliser les variables d’environnement :  
 `process.env.AUTH_SERVICE_SERVICE_HOST` et `process.env.AUTH_SERVICE_SERVICE_PORT` pour récupérer l’adresse IP et le port du service `auth-service`.
 
+### Ajouter un Front-End
+
+Il faut savoir que notre Front-End a besoin de la variable d'environnement `REACT_APP_TASKS_API_URL` qui est passée en argument lors du build.
+
+Cette variable `REACT_APP_TASKS_API_URL` permet au front de connaître l’URL de l’API tasks.
+
+Pour l’obtenir, il faut d’abord déployer la partie Back-End dans Kubernetes, puis lancer la partie Front-End.
+
+```
+# Lancer le Back-End Kubernetes
+$ kubectl apply -f k8s-users.yaml -f k8s-tasks.yaml -f k8s-auth.yaml
+
+# Exposer les LoadBalancers des services tasks et users (si besoin)
+$ minikube service tasks-service users-service
+```
+
+Récupérer l’adresse IP du LoadBalancer exposé par Minikube pour le service `tasks-service` :
+
+```
+$ minikube service tasks-service --url
+# Exemple de sortie :
+# http://192.168.49.2:30370
+```
+
+Ajouter l’adresse IP récupérée comme argument `REACT_APP_TASKS_API_URL` lors du build du front-end Docker :
+
+```
+$ docker build --build-arg REACT_APP_TASKS_API_URL="http://192.168.49.2:30370" -t rhannachi1991/frontend-net-k8s:latest ./front-end
+$ docker push rhannachi1991/frontend-net-k8s:latest
+```
+
+Enfin, ajouter un nouveau fichier Kubernetes de déploiement pour le front-end :  
+[k8s-frontend.yaml](./k8s-frontend.yaml)
+
+```
+# Lancer le Front-End Kubernetes
+$ kubectl apply -f k8s-frontend.yaml
+$ minikube service frontend-service 
+```
+
+Cette méthode garantit que le front React est construit avec la bonne URL de l’API selon l’environnement Minikube où le back-end est exposé.
+
+
+

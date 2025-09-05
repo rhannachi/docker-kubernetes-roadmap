@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-pod
+  template:
+    metadata:
+      labels:
+        app: frontend-pod
+    spec:
+      containers:
+        - name: frontend-container
+          image: rhannachi1991/frontend-net-k8s:latest
+#          env:
+#            - name: REACT_APP_TASKS_API_URL
+#              value: 'http://192.168.49.2:30370'
+          ports:
+            - containerPort: 80
+              name: frontend-port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend-pod
+  ports:
+    - port: 80
+      targetPort: frontend-port
+      protocol: TCP
