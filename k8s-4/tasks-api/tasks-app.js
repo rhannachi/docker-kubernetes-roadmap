@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const cors = require('cors');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -14,13 +13,14 @@ console.log('TASKS_FOLDER: ', TASKS_FOLDER);
 const filePath = path.join(__dirname, TASKS_FOLDER, 'tasks.txt');
 
 const app = express();
-// pour autoriser UNE origine spécifique "Front-End" :
-app.use(cors({
-  // TODO !!!!!!!!!!!!
-  origin: 'http://localhost:3000'
-}));
-
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  next();
+})
 
 app.get('/healthcheck', (req, res) => {
   console.log("GET /healthcheck OK")
