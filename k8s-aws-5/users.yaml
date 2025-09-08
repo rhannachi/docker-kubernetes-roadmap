@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-pod
+  template:
+    metadata:
+      labels:
+        app: users-pod
+    spec:
+      containers:
+        - name: users-container
+          image: rhannachi1991/users-aws-k8s:latest
+          ports:
+            - containerPort: 3000
+              name: users-port
+          env:
+            - name: MONGODB_CONNECTION_URI
+              value: 'mongodb+srv://admin:OV1sKe5HY2MogSpY@cluster0.0tnlpgh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+            - name: AUTH_API_ADDRESSS
+              value: 'http://auth-service.default:3000'
+          livenessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+          readinessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+spec:
+  selector:
+    app: users-pod
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: users-port
