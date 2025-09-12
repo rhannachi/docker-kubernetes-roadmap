@@ -1,4 +1,4 @@
-## Docker
+## Docker, ECS, EKS AWS
 
 #### 1. Commande de base:
 - [exemple 1](./basic-command/node/README.md)
@@ -11,7 +11,7 @@
 #### 6. [Laravel containerization](./laravel-containerization/README.md)
 #### 7. [ECS Aws](./multi-container-deployment-aws/README.md)
 
-## Kubernetes
+## Kubernetes & EKS AWS
 #### 1. [Introduction](k8s-1/README-1-introduction.md)
 #### 2. [Deployment](k8s-1/README-2-deployment.md)
 #### 3. [Service](k8s-1/README-3-service.md)
@@ -21,7 +21,8 @@
 #### 7. [Health Checks](k8s-2/README.md)
 #### 8. [Volume](k8s-3/README.md)
 #### 9. [Env](k8s-3/README-env.md)
-#### 9. [Networking](k8s-4/README.md)
-#### 9. [EKS Aws](k8s-aws-5/README.md)
+#### 10. [Networking](k8s-4/README.md)
+#### 11. [EKS Aws](k8s-aws-5/README.md)
+#### 11. [EKS Aws Volume](k8s-aws-5/README-volume.md)
 
 
