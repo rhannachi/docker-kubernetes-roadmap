@@ -115,17 +115,42 @@ Pourquoi alors créer des groupes de nœuds?
     - etc
 - Les groupes de nœuds sont **fortement recommandés** pour les environnements de production ou lorsque tu as besoin d’automatisation, de haute disponibilité, d’optimisation du coût, ou de gestion avancée.
 
-Pour pouvoir créer un groupe de nœuds, il est obligatoire d’ajouter le module complémentaire **Amazon VPC CNI** dans la section **Modules complémentaires** du cluster.
+Pour créer et exploiter un groupe de nœuds, il est recommandé d’installer certains modules complémentaires:
 
 ![add-on.png](images/add-on.png)
 
-Après l’ajout du module complémentaire, il est possible d’aller dans la section **Groupes de nœuds** et cliquer sur **Ajouter** :
+Après l’ajout des modules complémentaires, il est possible d’aller dans la section **Groupes de nœuds** et cliquer sur **Ajouter** :
 
 - Donner un nom à notre groupe de nœuds, par exemple `group-node-eks`.
-- Choisir un rôle IAM, ou créer un rôle recommandé via l’option **Créer un rôle recommandé** si nécessaire.
+- Choisir un **rôle IAM** (s’il n’existe pas, vous pouvez le créer rapidement via «Créer un rôle recommandé»).
 - Activer la **réparation automatique de nœuds** dans la section **Configuration de la réparation automatique de nœuds**.
 
-### Déployer notre configuration Kubernetes
+### Déployer notre configuration Kubernetes sur AWS EKS
+Pour exposer le service `users-service` via un Network Load Balancer géré par le AWS Load Balancer Controller, recommande d’utiliser la configuration suivante:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+  annotations:
+    # Utiliser un NLB IP target (pods) géré par AWS Load Balancer Controller
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    # Mettre en route un Load Balancer internet-facing (accessible publiquement)
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    # Activer proxy protocol si besoin d'adresser le client réel (optionnel)
+    # service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+spec:
+  selector:
+    app: users-pod
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80                # Port exposé au public
+      targetPort: users-port  # Port sur le pod
+  loadBalancerClass: eks.amazonaws.com/nlb
+```
 
 ```
 $ kubectl apply -f users.yaml -f auth.yaml
