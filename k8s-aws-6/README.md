@@ -64,3 +64,5 @@ Ensuite, tu peux déployer les ressources Kubernetes
 ```
 $ kubectl apply -f users.yaml -f auth.yaml
 ```
+
+![post-man.png](images/post-man.png)
