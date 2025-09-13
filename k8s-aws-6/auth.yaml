@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-pod
+  template:
+    metadata:
+      labels:
+        app: auth-pod
+    spec:
+      containers:
+        - name: auth-container
+          image: rhannachi1991/auth-aws-k8s:latest
+          ports:
+            - containerPort: 3000
+              name: auth-port
+          env:
+            - name: TOKEN_KEY
+              value: 'shouldbeverysecure'
+          livenessProbe:
+            httpGet:
+              port: auth-port
+              path: /healthcheck
+            initialDelaySeconds: 60  # par exemple, attendre 20 secondes avant de lancer la 1ère sonde
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              port: auth-port
+              path: /healthcheck
+            initialDelaySeconds: 60  # par exemple, attendre 20 secondes avant de lancer la 1ère sonde
+            periodSeconds: 5
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+spec:
+  selector:
+    app: auth-pod
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: auth-port

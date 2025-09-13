@@ -20,5 +20,47 @@ Dans Kubernetes sur AWS EKS, tu as besoin de stocker les données de tes pods. P
 - Tes pods peuvent monter ce volume EFS comme un répertoire normal (par ex. `/mnt/data`).
 - Cela permet notamment d’avoir un stockage partagé entre plusieurs microservices, ou de conserver les fichiers même si les pods sont recréés.
 
-## 
+## Configurer le stockage Amazon EFS avec le pilote CSI sur EKS (`my-cluster`)
 
+Pour ajouter du stockage partagé EFS à ton cluster EKS, il faut installer le module complémentaire **Amazon EFS CSI Driver** (`aws-efs-csi-driver`) dans la section modules complémentaires du cluster.
+
+![add-on.png](images/add-on.png)
+
+### Créer un groupe de sécurité pour EFS
+- Donne un nom à ton groupe de sécurité, par exemple: `efs-eks-gs`.
+- Sélectionne le VPC que tu as créé précédemment via CloudFormation (le même VPC utilisé par ton cluster EKS)
+- Pour permettre la communication entre ton cluster EKS et EFS, ajoute une règle entrante NFS (TCP/2049):
+  - Source: IP (Sélectionne le même VPC utilisé par ton cluster EKS.)
+  - Port: 2049 (NFS)
+  - Protocole: TCP
+
+![groupe_securite.png](images/groupe_securite.png)
+![vpc.png](images/vpc.png)
+
+### crée un système de fichiers EFS
+- Choisis un nom pour le système de fichiers EFS.
+- Sélectionne le même VPC utilisé par ton cluster EKS.
+- Pour chaque zone de disponibilité du VPC, crée un point de montage et associe le groupe de sécurité `efs-eks-gs`.
+
+![efs.png](images/efs.png)
+
+### Lancer le déploiement
+
+Avant de lancer le déploiement, il est nécessaire de mettre à jour l'**identifiant du système de fichiers EFS** dans la configuration du PersistentVolume (PV):
+
+![efs_id.png](images/efs_id.png)
+
+```yaml
+...
+  csi:
+    driver: efs.csi.aws.com
+    # <AJOUTER l'ID de votre EFS !>
+    volumeHandle: fs-04f402c3c23308d46
+...
+```
+> Remplace toujours `fs-04f402c3c23308d46` par l’ID réel de ton système EFS dans AWS.
+
+Ensuite, tu peux déployer les ressources Kubernetes
+```
+$ kubectl apply -f users.yaml -f auth.yaml
+```

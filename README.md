@@ -23,6 +23,6 @@
 #### 9. [Env](k8s-3/README-env.md)
 #### 10. [Networking](k8s-4/README.md)
 #### 11. [EKS Aws](k8s-aws-5/README.md)
-#### 11. [EKS Aws Volume](k8s-aws-5/README-volume.md)
+#### 11. [EKS Aws Volume](k8s-aws-6/README.md)
 
 

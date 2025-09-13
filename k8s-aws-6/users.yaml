@@ -1,0 +1,102 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: efs-sc
+provisioner: efs.csi.aws.com
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    # <AJOUTER l'ID de votre EFS !>
+    volumeHandle: fs-04f402c3c23308d46
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-pod
+  template:
+    metadata:
+      labels:
+        app: users-pod
+    spec:
+      volumes:
+        - name: efs-vol
+          persistentVolumeClaim:
+            claimName: efs-pvc
+      containers:
+        - name: users-container
+          image: rhannachi1991/users-aws-k8s:latest
+          ports:
+            - containerPort: 3000
+              name: users-port
+          volumeMounts:
+            - name: efs-vol
+              mountPath: /app/users
+          env:
+            - name: MONGODB_CONNECTION_URI
+              value: 'mongodb+srv://admin:OV1sKe5HY2MogSpY@cluster0.0tnlpgh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+            - name: AUTH_API_ADDRESSS
+              value: 'http://auth-service.default:3000'
+          livenessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+            initialDelaySeconds: 60  # par exemple, attendre 20 secondes avant de lancer la 1ère sonde
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              port: users-port
+              path: /healthcheck
+            initialDelaySeconds: 60  # par exemple, attendre 20 secondes avant de lancer la 1ère sonde
+            periodSeconds: 5
+            failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-service
+  annotations:
+    # Utiliser un NLB IP target (pods) géré par AWS Load Balancer Controller
+    service.beta.kubernetes.io/aws-load-balancer-type: "external"
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+    # Mettre en route un Load Balancer internet-facing (accessible publiquement)
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+    # Activer proxy protocol si besoin d'adresser le client réel (optionnel)
+    # service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+spec:
+  selector:
+    app: users-pod
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80                # Port exposé au public
+      targetPort: users-port  # Port sur le pod
+  loadBalancerClass: eks.amazonaws.com/nlb
